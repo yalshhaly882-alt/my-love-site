@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { background: #000; color: #ff00ff; font-family: 'Arial', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .neon-text { text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; }
+        .hidden { display: none; }
+        input { padding: 10px; border: 2px solid #ff00ff; background: #000; color: #fff; border-radius: 10px; }
+        button { background: #ff00ff; color: #000; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        #main-content { text-align: center; width: 90%; }
+        .card { border: 2px solid #ff00ff; padding: 20px; margin: 10px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+        .card:hover { box-shadow: 0 0 20px #ff00ff; }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <h1 class="neon-text" id="typed-text"></h1>
+        <input type="password" id="pass" placeholder="أدخل الباسورد">
+        <button onclick="checkPass()">دخول</button>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <audio id="bg-music" loop>
+            <source src="YOUR_SONG_LINK.mp3" type="audio/mpeg">
+        </audio>
+        <button onclick="toggleMusic()">تشغيل/إيقاف الموسيقى 🎵</button>
+        
+        <div id="gallery">
+            </div>
+        
+        <div id="display-area" style="margin-top: 20px; font-size: 20px;"></div>
+    </div>
+
+    <script>
+        // رسالة الترحيب التدريجية
+        const text = "مرحبا بك يا حبيبة.. هذا الموقع صمم خصيصاً لكِ ❤️";
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                document.getElementById("typed-text").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, 100);
+            }
+        }
+        type();
+
+        function checkPass() {
+            if (document.getElementById("pass").value === "14/11") {
+                document.getElementById("welcome-screen").classList.add("hidden");
+                document.getElementById("main-content").classList.remove("hidden");
+                document.getElementById("bg-music").play();
+            } else {
+                alert("الباسورد غلط يا حب!");
+            }
+        }
+
+        // جلب المحتوى من npoint
+        fetch('https://api.npoint.io/0b50d5485bbfe4dcae07')
+            .then(res => res.json())
+            .then(data => {
+                const gallery = document.getElementById("gallery");
+                data.photos.forEach(item => {
+                    gallery.innerHTML += `<div class="card" onclick="showMsg('${item.text}')"><img src="${item.url}" width="100px"><p>${item.text}</p></div>`;
+                });
+            });
+
+        function showMsg(msg) {
+            document.getElementById("display-area").innerText = msg;
+        }
+
+        function toggleMusic() {
+            let audio = document.getElementById("bg-music");
+            audio.paused ? audio.play() : audio.pause();
+        }
+
+        // كود التحكم المخفي
+        function adminPanel() {
+            let p = prompt("أدخل كود الأدمن:");
+            if (p === "1234") { 
+                window.location.href = "https://www.npoint.io/docs/0b50d5485bbfe4dcae07";
+            } else {
+                alert("محاولة غير مصرح بها!");
+            }
+        }
+    </script>
+    
+    <button onclick="adminPanel()" style="background:transparent; border:none; color:black; cursor:default; position:fixed; bottom:0; right:0;">.</button>
+
+    <div style="position:fixed; bottom:10px; left:10px; color:#555; font-size:10px;">Dev Yousef</div>
+</body>
+</html>
